@@ -24,15 +24,14 @@ jobs:
       - name: Set up build environment
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential clang flex g++ g++ gawk gcc-multilib gettext \
+          sudo apt-get install -y build-essential clang flex g++ gawk gcc-multilib gettext \
           git libncurses5-dev libssl-dev python3-setuptools rsync unzip zlib1g-dev \
           file wget
 
       - name: Clone OpenWrt source
         run: |
-          git clone https://github.com/openwrt/openwrt.git -b v${{ env.OPENWRT_VERSION }} openwrt
-          cd openwrt
-          git pull
+          # Clone the specific version tag without the full history for speed.
+          git clone https://github.com/openwrt/openwrt.git -b v${{ env.OPENWRT_VERSION }} --depth 1 openwrt
 
       - name: Update feeds
         run: |

@@ -30,37 +30,36 @@ jobs:
 
       - name: Clone OpenWrt source
         run: |
-          # Clone the specific version tag without the full history for speed.
           git clone https://github.com/openwrt/openwrt.git -b v${{ env.OPENWRT_VERSION }} --depth 1 openwrt
 
       - name: Update feeds
+        working-directory: ./openwrt
         run: |
-          cd openwrt
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
       - name: Add custom SFE patches
+        working-directory: ./openwrt
         run: |
-          cd openwrt
-          for p in `ls -1 ../patches/*.patch`; do
+          for p in `ls -1 ${{ github.workspace }}/patches/*.patch`; do
             echo "Applying patch $p"
             patch -p1 < $p
           done
 
       - name: Load custom configuration
         run: |
-          cp ../configs/${{ env.CONFIG_FILE }} openwrt/.config
+          cp ${{ github.workspace }}/configs/${{ env.CONFIG_FILE }} openwrt/.config
           cd openwrt
           make defconfig
 
       - name: Download packages
+        working-directory: ./openwrt
         run: |
-          cd openwrt
           make download -j$(nproc)
 
       - name: Build firmware
+        working-directory: ./openwrt
         run: |
-          cd openwrt
           make -j$(nproc) V=s
 
       - name: Upload firmware artifacts

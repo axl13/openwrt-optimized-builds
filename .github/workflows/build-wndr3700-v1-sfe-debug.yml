@@ -11,7 +11,7 @@ on:
 env:
   OPENWRT_VERSION: ${{ github.event.inputs.openwrt_version }}
   CONFIG_FILE: 'wndr3700-v1-sfe-debug.config'
-  SFE_FEED_URL: 'https://github.com/Nossiac/sfe-fast-path'
+  SFE_FEED_URL: 'git://github.com/Nossiac/sfe-fast-path.git'
   TZ: 'UTC'
 
 jobs:

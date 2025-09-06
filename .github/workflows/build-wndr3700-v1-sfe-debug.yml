@@ -11,6 +11,7 @@ on:
 env:
   OPENWRT_VERSION: ${{ github.event.inputs.openwrt_version }}
   CONFIG_FILE: 'wndr3700-v1-sfe-debug.config'
+  SFE_FEED_URL: 'https://github.com/Nossiac/sfe-fast-path'
   TZ: 'UTC'
 
 jobs:
@@ -32,19 +33,16 @@ jobs:
         run: |
           git clone https://github.com/openwrt/openwrt.git -b v${{ env.OPENWRT_VERSION }} --depth 1 openwrt
 
-      - name: Update feeds
+      - name: Add SFE custom feed
+        working-directory: ./openwrt
+        run: |
+          echo "src-git sfe ${{ env.SFE_FEED_URL }}" >> feeds.conf.default
+
+      - name: Update and install feeds
         working-directory: ./openwrt
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-
-      - name: Add custom SFE patches
-        working-directory: ./openwrt
-        run: |
-          for p in `ls -1 ${{ github.workspace }}/patches/*.patch`; do
-            echo "Applying patch $p"
-            patch -p1 < $p
-          done
 
       - name: Load custom configuration
         run: |

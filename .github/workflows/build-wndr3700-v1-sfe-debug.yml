@@ -5,14 +5,8 @@ on:
     branches:
       - master
   workflow_dispatch:
-    inputs:
-      openwrt_version:
-        description: 'OpenWrt Version (e.g., 23.05.3)'
-        required: true
-        default: '23.05.3'
 
 env:
-  OPENWRT_VERSION: ${{ github.event.inputs.openwrt_version || '23.05.3' }}
   CONFIG_FILE: 'wndr3700-v1-sfe-debug.config'
   TZ: 'UTC'
 
@@ -21,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout our repository (for config file)
         uses: actions/checkout@v4
 
       - name: Set up build environment
@@ -31,42 +25,26 @@ jobs:
           git libncurses5-dev libssl-dev python3-setuptools rsync unzip zlib1g-dev \
           file wget
 
-      - name: Clone OpenWrt source
+      - name: Clone gwlim OpenWrt source
         run: |
-          git clone https://github.com/openwrt/openwrt.git -b v${{ env.OPENWRT_VERSION }} --depth 1 openwrt
+          git clone https://github.com/gwlim/openwrt-optimized-builds.git --depth 1 openwrt-builder
 
-      - name: Update and install feeds
-        working-directory: ./openwrt
+      - name: Prepare build
+        working-directory: ./openwrt-builder
         run: |
+          cp ../configs/${{ env.CONFIG_FILE }} .config
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-      
-      - name: Run build script
-        working-directory: ./openwrt
-        run: |
-          cp ../build_openwrt.sh .
-          chmod +x build_openwrt.sh
-          ./build_openwrt.sh
-
-      - name: Load custom configuration
-        run: |
-          cp ${{ github.workspace }}/configs/${{ env.CONFIG_FILE }} openwrt/.config
-          cd openwrt
-          make defconfig
-
-      - name: Download packages
-        working-directory: ./openwrt
-        run: |
-          make download -j$(nproc)
 
       - name: Build firmware
-        working-directory: ./openwrt
+        working-directory: ./openwrt-builder
         run: |
-          # Force a rerun
+          make defconfig
+          make download -j$(nproc)
           make -j$(nproc) V=s
 
       - name: Upload firmware artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: openwrt-firmware-${{ env.OPENWRT_VERSION }}-${{ env.CONFIG_FILE }}
-          path: openwrt/bin/targets/ath79/generic/
+          name: openwrt-firmware-${{ env.CONFIG_FILE }}
+          path: openwrt-builder/bin/targets/ath79/generic/

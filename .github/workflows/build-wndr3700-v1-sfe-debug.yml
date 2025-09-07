@@ -11,7 +11,6 @@ on:
 env:
   OPENWRT_VERSION: ${{ github.event.inputs.openwrt_version }}
   CONFIG_FILE: 'wndr3700-v1-sfe-debug.config'
-  SFE_FEED_URL: 'https://github.com/Nossiac/sfe-fast-path.git'
   TZ: 'UTC'
 
 jobs:
@@ -33,16 +32,16 @@ jobs:
         run: |
           git clone https://github.com/openwrt/openwrt.git -b v${{ env.OPENWRT_VERSION }} --depth 1 openwrt
 
-      - name: Run build script
-        run: |
-          chmod +x build_openwrt.sh
-          ./build_openwrt.sh
-
       - name: Update and install feeds
         working-directory: ./openwrt
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
+      
+      - name: Run build script
+        run: |
+          chmod +x build_openwrt.sh
+          ./build_openwrt.sh
 
       - name: Load custom configuration
         run: |

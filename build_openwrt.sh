@@ -4,9 +4,11 @@
 git clone https://github.com/openwrt/openwrt.git -b v23.05.3 openwrt
 cd openwrt
 
-# Apply SFE patches
-wget -O sfe.patch "https://git.codelinaro.org/clo/qsdk/oss/system/openwrt-patches-23.05/-/raw/NHSS.QSDK.12.4.5.r3/0052-netsupport.mk-fix-kmod-nss-sfe-configuration-issues.patch"
-git apply sfe.patch
+# Apply SFE patches from gwlim fork
+wget -O 0001-sfe-flowoffload.patch "https://raw.githubusercontent.com/gwlim/openwrt-sfe-flowoffload-ath79/master/patches/0001-sfe-flowoffload.patch"
+wget -O 0002-sfe-shortcut-for-prev-and-next-headers.patch "https://raw.githubusercontent.com/gwlim/openwrt-sfe-flowoffload-ath79/master/patches/0002-sfe-shortcut-for-prev-and-next-headers.patch"
+git apply 0001-sfe-flowoffload.patch
+git apply 0002-sfe-shortcut-for-prev-and-next-headers.patch
 
 # Update feeds
 ./scripts/feeds update -a

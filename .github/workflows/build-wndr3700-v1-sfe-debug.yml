@@ -35,11 +35,6 @@ jobs:
         run: |
           git clone https://github.com/openwrt/openwrt.git -b v${{ env.OPENWRT_VERSION }} --depth 1 openwrt
 
-      - name: Add custom SFE feed
-        working-directory: ./openwrt
-        run: |
-          echo 'src-git sfe https://github.com/Nossiac/sfe-fast-path.git' >> feeds.conf.default
-
       - name: Update and install feeds
         working-directory: ./openwrt
         run: |

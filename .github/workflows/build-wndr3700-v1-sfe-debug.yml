@@ -12,7 +12,7 @@ on:
         default: '23.05.3'
 
 env:
-  OPENWRT_VERSION: ${{ github.event.inputs.openwrt_version }}
+  OPENWRT_VERSION: ${{ github.event.inputs.openwrt_version || '23.05.3' }}
   CONFIG_FILE: 'wndr3700-v1-sfe-debug.config'
   TZ: 'UTC'
 

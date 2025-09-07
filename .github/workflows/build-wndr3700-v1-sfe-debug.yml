@@ -59,6 +59,7 @@ jobs:
       - name: Build firmware
         working-directory: ./openwrt
         run: |
+          # Force a rerun
           make -j$(nproc) V=s
 
       - name: Upload firmware artifacts

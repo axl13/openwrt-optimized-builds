@@ -1,14 +1,10 @@
 #!/bin/bash
 
-# Clone OpenWrt 23.05.3 source code
-git clone https://github.com/openwrt/openwrt.git -b v23.05.3 openwrt
+# Clone gwlim's pre-patched OpenWrt source for SFE
+git clone https://github.com/gwlim/openwrt.git -b 23.05-sfe openwrt
 cd openwrt
 
-# Apply SFE patches from gwlim fork
-wget -O 0001-sfe-flowoffload.patch "https://raw.githubusercontent.com/gwlim/openwrt-sfe-flowoffload-ath79/master/patches/0001-sfe-flowoffload.patch"
-wget -O 0002-sfe-shortcut-for-prev-and-next-headers.patch "https://raw.githubusercontent.com/gwlim/openwrt-sfe-flowoffload-ath79/master/patches/0002-sfe-shortcut-for-prev-and-next-headers.patch"
-git apply 0001-sfe-flowoffload.patch
-git apply 0002-sfe-shortcut-for-prev-and-next-headers.patch
+# Patches are already included in the source. No manual patching needed.
 
 # Update feeds
 ./scripts/feeds update -a

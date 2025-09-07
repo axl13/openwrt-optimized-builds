@@ -25,7 +25,7 @@ env:
   CUSTOM_DIR: ${{ github.workspace }}/patch
   OPENWRT_ISA: mips32r2
   OPENWRT_TARGET: ath79
-  OPENWRT_SUBTARGET: nand
+  OPENWRT_SUBTARGET: generic
   OPENWRT_DEVICE_MODEL: netgear_wndr3700_v1
   OPENWRT_CPU_CFLAG: -mno-branch-likely
   OPENWRT_CPU_NUMPROC: 1

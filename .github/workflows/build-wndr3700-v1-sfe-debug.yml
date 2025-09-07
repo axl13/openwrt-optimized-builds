@@ -1,6 +1,9 @@
 name: 'Build WNDR3700v1 SFE (Debug Enabled)'
 
 on:
+  push:
+    branches:
+      - master
   workflow_dispatch:
     inputs:
       openwrt_version:

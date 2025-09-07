@@ -38,11 +38,10 @@ jobs:
           ./scripts/feeds update -a
           ./scripts/feeds install -a
       
-      - name: List files for debugging
-        run: ls -l
-
       - name: Run build script
+        working-directory: ./openwrt
         run: |
+          cp ../build_openwrt.sh .
           chmod +x build_openwrt.sh
           ./build_openwrt.sh
 
